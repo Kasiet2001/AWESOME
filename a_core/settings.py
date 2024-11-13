@@ -16,6 +16,14 @@ from pathlib import Path
 import django.core.mail.backends.base
 
 from environ import Env
+import dj_database_url
+from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv(Path(__file__).resolve().parent / '.env')
+
 
 env = Env()
 Env.read_env()
@@ -125,6 +133,13 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+POSTGRES_LOCALLY = False
+
+if ENVIRONMENT == 'production' or POSTGRES_LOCALLY == True:
+    DATABASES = {
+        'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    }
 
 
 # Password validation
